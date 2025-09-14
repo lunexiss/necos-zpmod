@@ -1,5 +1,6 @@
 # Neco's ZPMod
 A Zombie Plague multiplayer mod for Half-Life 1.  
+About the source code, I'll release it soon
 
 ## Installation
 1. Extract the `.zip` release into your Half-Life **valve** folder `C:\Program Files (x86)\Steam\steamapps\common\Half-Life\valve`
