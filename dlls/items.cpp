@@ -28,6 +28,7 @@
 #include "skill.h"
 #include "items.h"
 #include "gamerules.h"
+#include "zpmod\zpmod.h"
 
 extern int gmsgItemPickup;
 
@@ -106,8 +107,8 @@ extern int gEvilImpulse101;
 
 void CItem::ItemTouch( CBaseEntity *pOther )
 {
-	// if it's not a player, ignore
-	if( !pOther->IsPlayer() )
+	// if it's not a player and is a zombie, ignore
+	if( !pOther->IsPlayer() or ZPIsZombie(pOther->edict()) )
 	{
 		return;
 	}

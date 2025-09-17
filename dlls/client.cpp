@@ -23,6 +23,7 @@
 
 */
 
+#include "zpmod/zpmod.h"
 #include "extdll.h"
 #include "util.h"
 #include "cbase.h"
@@ -39,6 +40,8 @@
 #include "usercmd.h"
 #include "netadr.h"
 #include "pm_shared.h"
+#include "safe_snprintf.h"
+#include "adminpanel.h"
 
 extern DLL_GLOBAL ULONG		g_ulModelIndexPlayer;
 extern DLL_GLOBAL BOOL		g_fGameOver;
@@ -105,12 +108,14 @@ void ClientDisconnect( edict_t *pEntity )
 
 	char text[256] = "";
 	if( pEntity->v.netname )
-		safe_snprintf( text, sizeof( text ), "- %s has left the game\n", STRING( pEntity->v.netname ));
+		safe_snprintf( text, sizeof( text ), "- awh, %s has left the game :(\n", STRING( pEntity->v.netname ));
 
 	MESSAGE_BEGIN( MSG_ALL, gmsgSayText, NULL );
 		WRITE_BYTE( ENTINDEX( pEntity ) );
 		WRITE_STRING( text );
 	MESSAGE_END();
+
+	ZPPlayerDisconnect(pEntity);
 
 	CSound *pSound = CSoundEnt::SoundPointerForIndex( CSoundEnt::ClientSoundIndex( pEntity ) );
 
@@ -204,6 +209,7 @@ void ClientPutInServer( edict_t *pEntity )
 
 	pPlayer->pev->iuser1 = 0;
 	pPlayer->pev->iuser2 = 0;
+	ZPPrecache();
 }
 
 #if !NO_VOICEGAMEMGR
@@ -359,6 +365,12 @@ void Host_Say( edict_t *pEntity, int teamonly )
 		}
 
 		p = szTemp;
+	}
+
+    if (p[0] == '!')
+    {
+		handleCommands(player->edict(), p);
+        return;
 	}
 
 	// remove quotes if present
@@ -613,8 +625,7 @@ void ClientCommand( edict_t *pEntity )
 	{
 		// clear 'Unknown command: VModEnable' in singleplayer
 		return;
-	}
-	else
+	} else
 	{
 		// tell the user they entered an unknown command
 		char command[128];
@@ -732,6 +743,8 @@ void ServerActivate( edict_t *pEdictList, int edictCount, int clientMax )
 	// Every call to ServerActivate should be matched by a call to ServerDeactivate
 	g_serveractive = 1;
 
+	ZPModInit();
+
 	// Clients have not been initialized yet
 	for( i = 0; i < edictCount; i++ )
 	{
@@ -814,6 +827,8 @@ void StartFrame( void )
 
 	if( g_pGameRules )
 		g_pGameRules->Think();
+		// ZPHUD(); // we already got zproundthink honey
+		ZPRoundThink(&g_round);
 
 	if( g_fGameOver )
 		return;

@@ -521,6 +521,9 @@ int CBaseEntity::TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, fl
 {
 	Vector vecTemp;
 
+	if (pevAttacker && pevAttacker->team == pev->team)
+	    return 0; // wtf bitch they can't kill their "friends"
+
 	if( !pev->takedamage )
 		return 0;
 

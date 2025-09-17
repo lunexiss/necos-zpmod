@@ -118,6 +118,17 @@ void AddMultiDamage( entvars_t *pevInflictor, CBaseEntity *pEntity, float flDama
 	if( !pEntity )
 		return;
 
+	if (pEntity->IsPlayer() && (pevInflictor->flags & FL_CLIENT)) {
+		if (pEntity->edict()->v.team == pevInflictor->team) {
+			edict_t* attacker = ENT(pevInflictor->pContainingEntity);
+			if (attacker) {
+				CLIENT_PRINTF(attacker, print_center, "You can't attack your teammate\n");
+			}
+			return;
+		}
+	}
+
+
 	gMultiDamage.type |= bitsDamageType;
 
 	if( pEntity != gMultiDamage.pEntity )

@@ -36,6 +36,7 @@
 #include "game.h"
 #include "pm_shared.h"
 #include "hltv.h"
+#include "zpmod/zpmod.h"
 
 // #define DUCKFIX
 
@@ -647,6 +648,8 @@ int CBasePlayer::TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, fl
 			SetSuitUpdate( "!HEV_HLTH1", FALSE, SUIT_NEXT_IN_10MIN );	// health dropping
 	}
 
+	ZPHurt(this->edict());
+
 	return fTookDamage;
 }
 
@@ -908,6 +911,8 @@ void CBasePlayer::Killed( entvars_t *pevAttacker, int iGib )
 			pSound->Reset();
 		}
 	}
+
+	ZPDied(this->edict());
 
 	SetAnimation( PLAYER_DIE );
 
@@ -3741,6 +3746,10 @@ int CBasePlayer::AddPlayerItem( CBasePlayerItem *pItem )
 	CBasePlayerItem *pInsert;
 
 	pInsert = m_rgpPlayerItems[pItem->iItemSlot()];
+
+	if (ZPIsZombie(this->edict())) {
+        return FALSE; // zombies can’t have weapons bitch
+    }
 
 	while( pInsert )
 	{

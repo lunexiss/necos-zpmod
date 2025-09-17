@@ -66,7 +66,9 @@ typedef int BOOL;
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+#if defined(_MSC_VER)
 #include "safe_snprintf.h"
+#endif
 #ifndef __restrict
 #define	__restrict 
 #endif

@@ -1246,6 +1246,18 @@ void CBaseEntity::TraceAttack(entvars_t *pevAttacker, float flDamage, Vector vec
 {
 	Vector vecOrigin = ptr->vecEndPos - vecDir * 4.0f;
 
+	CBaseEntity *pEntity = (CBaseEntity *)GET_PRIVATE(ptr->pHit);
+    edict_t *pVictim = pEntity ? pEntity->edict() : nullptr;
+
+	if (pevAttacker->team == pev->team )
+	    return; // woah woah woah chill
+	
+	if (ptr->iHitgroup == HITGROUP_HEAD && sv_headshot.value == 1)
+    {
+		EMIT_SOUND(pVictim, CHAN_VOICE, "headshot.wav", 1.0, ATTN_NORM);
+        flDamage *= 3.0f;
+    }
+
 	if( pev->takedamage )
 	{
 		AddMultiDamage( pevAttacker, this, flDamage, bitsDamageType );
@@ -1293,12 +1305,16 @@ void CBaseMonster::TraceAttack( entvars_t *pevAttacker, float flDamage, Vector v
 	{
 		m_LastHitGroup = ptr->iHitgroup;
 
+		CBaseEntity *pEntity = (CBaseEntity *)GET_PRIVATE(ptr->pHit);
+        edict_t *pVictim = pEntity ? pEntity->edict() : nullptr;
+
 		switch( ptr->iHitgroup )
 		{
 		case HITGROUP_GENERIC:
 			break;
 		case HITGROUP_HEAD:
-			flDamage *= gSkillData.monHead;
+			flDamage *= 3;
+			EMIT_SOUND(pVictim, CHAN_VOICE, "headshot.wav", 1.0, ATTN_NORM);
 			break;
 		case HITGROUP_CHEST:
 			flDamage *= gSkillData.monChest;

@@ -21,6 +21,7 @@
 #include "nodes.h"
 #include "player.h"
 #include "gamerules.h"
+#include "zpmod/zpmod.h"
 
 #define	CROWBAR_BODYHIT_VOLUME 128
 #define	CROWBAR_WALLHIT_VOLUME 512
@@ -155,13 +156,25 @@ void FindHullIntersection( const Vector &vecSrc, TraceResult &tr, float *mins, f
 
 void CCrowbar::PrimaryAttack()
 {
-	if( !Swing( 1 ) )
-	{
+    CBasePlayer* pPlayer = (CBasePlayer*)GET_PRIVATE(m_pPlayer->edict());
 #if !CLIENT_DLL
-		SetThink( &CCrowbar::SwingAgain );
-		pev->nextthink = gpGlobals->time + 0.1f;
+    if (pPlayer && ZPIsZombie(m_pPlayer->edict())) {
+        // use zombie claw attack instead of normal swing
+        if (gpGlobals->time >= pPlayer->pev->pain_finished) {
+            ZPZombieSwing(m_pPlayer->edict());
+            pPlayer->pev->pain_finished = gpGlobals->time + 0.5f; // cooldown
+        }
+        return; // skip normal crowbar swing
+    }
 #endif
-	}
+
+    // normal crowbar swing for humans
+    if( !Swing(1) ) {
+#if !CLIENT_DLL
+        SetThink( &CCrowbar::SwingAgain );
+        pev->nextthink = gpGlobals->time + 0.1f;
+#endif
+    }
 }
 
 void CCrowbar::Smack()

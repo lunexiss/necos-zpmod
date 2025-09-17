@@ -20,6 +20,7 @@
 #include "cl_util.h"
 #include "parsemsg.h"
 
+
 #include <string.h>
 #include <stdio.h>
 
@@ -172,7 +173,7 @@ int CHudDeathNotice::Draw( float flTime )
 
 // This message handler may be better off elsewhere
 int CHudDeathNotice::MsgFunc_DeathMsg( const char *pszName, int iSize, void *pbuf )
-{
+{	
 	int i;
 	m_iFlags |= HUD_ACTIVE;
 

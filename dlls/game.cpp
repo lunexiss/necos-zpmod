@@ -17,6 +17,8 @@
 #include "util.h"
 #include "game.h"
 #include "vcs_info.h"
+#include "cvardef.h"
+#include    "zpmod/zpmod.h"
 
 static cvar_t build_commit = { "sv_game_build_commit", g_VCSInfo_Commit };
 static cvar_t build_branch = { "sv_game_build_branch", g_VCSInfo_Branch };
@@ -463,6 +465,8 @@ cvar_t	sk_player_leg3	= { "sk_player_leg3","1" };
 cvar_t sv_pushable_fixed_tick_fudge = { "sv_pushable_fixed_tick_fudge", "15" };
 cvar_t sv_busters = { "sv_busters", "0" };
 
+cvar_t sv_headshot = { "sv_headshot", "1", FCVAR_SERVER };
+
 // Register your console variables here
 // This gets called one time when the game is initialied
 void GameDLLInit( void )
@@ -475,6 +479,8 @@ void GameDLLInit( void )
 	g_psv_developer = CVAR_GET_POINTER( "developer" );
 
 	g_enable_cheats = CVAR_GET_POINTER( "sv_cheats" );
+
+	CVAR_REGISTER( &sv_headshot );
 
 	CVAR_REGISTER( &build_commit );
 	CVAR_REGISTER( &build_branch );
@@ -892,5 +898,6 @@ void GameDLLInit( void )
 	CVAR_REGISTER( &sv_pushable_fixed_tick_fudge );
 
 	SERVER_COMMAND( "exec skill.cfg\n" );
+	ZPModInit();
 }
 

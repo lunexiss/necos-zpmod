@@ -22,6 +22,7 @@
 #include	"player.h"
 #include	"weapons.h"
 #include	"gamerules.h"
+#include "zpmod/zpmod.h"
  
 #include	"skill.h"
 #include	"game.h"
@@ -375,6 +376,7 @@ void CHalfLifeMultiplay::UpdateGameMode( CBasePlayer *pPlayer )
 void CHalfLifeMultiplay::InitHUD( CBasePlayer *pl )
 {
 	// notify other clients of player joining the game
+	ZPPlayerJoin(pl->edict());
 	UTIL_ClientPrintAll( HUD_PRINTNOTIFY, UTIL_VarArgs( "%s has joined the game\n", 
 		( pl->pev->netname && ( STRING( pl->pev->netname ) )[0] != 0 ) ? STRING( pl->pev->netname ) : "unconnected" ) );
 
