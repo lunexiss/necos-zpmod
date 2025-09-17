@@ -106,7 +106,7 @@ void ZPInfectPlayer(edict_t* player, bool wasInfectedBySomeone) {
     
     if (r == 6 && wasInfectedBySomeone == false) {
         g_players[idx].ZMClass = ZM_CLASS_BOSS;
-        EMIT_SOUND(player, CHAN_AUTO, "ambience/the_horror3.wav", 1.0, ATTN_NORM);
+        EMIT_SOUND(player, CHAN_AUTO, "ambience/the_horror3.wav", 1.0, ATTN_NONE);
     } else {
         r = RANDOM_LONG(1, 2);
         if (r == 1) {
