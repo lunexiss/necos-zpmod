@@ -41,7 +41,7 @@
 #include "netadr.h"
 #include "pm_shared.h"
 #include "safe_snprintf.h"
-#include "adminpanel.h"
+// #include "adminpanel.h"
 
 extern DLL_GLOBAL ULONG		g_ulModelIndexPlayer;
 extern DLL_GLOBAL BOOL		g_fGameOver;
@@ -365,12 +365,6 @@ void Host_Say( edict_t *pEntity, int teamonly )
 		}
 
 		p = szTemp;
-	}
-
-    if (p[0] == '!')
-    {
-		handleCommands(player->edict(), p);
-        return;
 	}
 
 	// remove quotes if present

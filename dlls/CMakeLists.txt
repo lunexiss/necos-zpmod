@@ -145,7 +145,6 @@ set (SVDLL_SOURCES
 	world.cpp
 	xen.cpp
 	zombie.cpp
-	adminpanel.cpp
 	zpmod/zpmod.cpp
 	../pm_shared/pm_debug.c
 	../pm_shared/pm_math.c
